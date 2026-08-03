@@ -35,10 +35,10 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/haugli92/homey-panasonic-ac/issues"
+    "url": "https://github.com/haugli92/Homey-Panasonic-AC/issues"
   },
-  "source": "https://github.com/haugli92/homey-panasonic-ac",
-  "support": "https://github.com/haugli92/homey-panasonic-ac/issues",
+  "source": "https://github.com/haugli92/Homey-Panasonic-AC",
+  "support": "https://github.com/haugli92/Homey-Panasonic-AC/issues",
   "images": {
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png",
