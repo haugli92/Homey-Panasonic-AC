@@ -9,8 +9,8 @@
     "no": "Panasonic AC (IR)"
   },
   "description": {
-    "en": "Control a Panasonic CS-E12DKEW heat pump over infrared using Homey's built-in IR blaster.",
-    "no": "Styr en Panasonic CS-E12DKEW varmepumpe over infrarødt med Homeys innebygde IR-sender."
+    "en": "Smart climate control over infrared",
+    "no": "Smart klimastyring over infrarødt"
   },
   "category": ["climate"],
   "brandColor": "#0056A0",
