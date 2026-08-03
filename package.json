@@ -1,5 +1,5 @@
 {
-  "name": "homey-panasonic-dke",
+  "name": "homey-panasonic-ac",
   "version": "1.0.0",
   "description": "Homey app controlling a Panasonic CS-E12DKEW heat pump over IR",
   "main": "app.js",
@@ -10,6 +10,6 @@
   "author": "Joran Haugli <joran.haugli@g.inn.no>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haugli92/homey-panasonic-dke.git"
+    "url": "https://github.com/haugli92/homey-panasonic-ac.git"
   }
 }
