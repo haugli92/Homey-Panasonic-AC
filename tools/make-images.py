@@ -6,7 +6,6 @@ Everything is rendered at 4x and downscaled with LANCZOS for smooth edges.
 Replace with custom artwork any time — Homey only needs valid PNGs at the
 right dimensions."""
 import os
-import shutil
 from PIL import Image, ImageDraw
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,9 +88,6 @@ for name, dim in (("small", (250, 175)), ("large", (500, 350)), ("xlarge", (1000
 for name, dim in (("small", (75, 75)), ("large", (500, 500)), ("xlarge", (1000, 1000))):
     save(glyph(dim), os.path.join(ROOT, "drivers", "heatpump", "assets", "images", f"{name}.png"))
 
-# Driver icon = app icon
-shutil.copyfile(
-    os.path.join(ROOT, "assets", "icon.svg"),
-    os.path.join(ROOT, "drivers", "heatpump", "assets", "icon.svg"),
-)
-print("copied driver icon.svg")
+# Note: the app icon (assets/icon.svg) and the driver icon
+# (drivers/heatpump/assets/icon.svg) are hand-maintained SVGs and are
+# intentionally different, so they are not generated/copied here.
