@@ -1,13 +1,13 @@
 {
   "type": "enum",
-  "title": { "en": "Fan speed", "no": "Viftehastighet" },
+  "title": { "en": "Fan speed" },
   "getable": true,
   "setable": true,
   "uiComponent": "picker",
   "values": [
-    { "id": "auto", "title": { "en": "Auto", "no": "Auto" } },
-    { "id": "low", "title": { "en": "Low", "no": "Lav" } },
-    { "id": "med", "title": { "en": "Medium", "no": "Middels" } },
-    { "id": "high", "title": { "en": "High", "no": "Høy" } }
+    { "id": "auto", "title": { "en": "Auto" } },
+    { "id": "low", "title": { "en": "Low" } },
+    { "id": "med", "title": { "en": "Medium" } },
+    { "id": "high", "title": { "en": "High" } }
   ]
 }

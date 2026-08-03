@@ -8,12 +8,10 @@
     "local"
   ],
   "name": {
-    "en": "Panasonic AC (IR)",
-    "no": "Panasonic AC (IR)"
+    "en": "Panasonic AC (IR)"
   },
   "description": {
-    "en": "Smart climate control over infrared",
-    "no": "Smart klimastyring over infrarødt"
+    "en": "Smart climate control over infrared"
   },
   "category": [
     "climate"
@@ -47,8 +45,7 @@
   "drivers": [
     {
       "name": {
-        "en": "Panasonic CS-E12DKEW",
-        "no": "Panasonic CS-E12DKEW"
+        "en": "Panasonic CS-E12DKEW"
       },
       "class": "thermostat",
       "capabilities": [
@@ -63,8 +60,7 @@
           "max": 30,
           "step": 1,
           "units": {
-            "en": "°C",
-            "no": "°C"
+            "en": "°C"
           }
         }
       },
@@ -96,8 +92,7 @@
     "pana_fan": {
       "type": "enum",
       "title": {
-        "en": "Fan speed",
-        "no": "Viftehastighet"
+        "en": "Fan speed"
       },
       "getable": true,
       "setable": true,
@@ -106,29 +101,25 @@
         {
           "id": "auto",
           "title": {
-            "en": "Auto",
-            "no": "Auto"
+            "en": "Auto"
           }
         },
         {
           "id": "low",
           "title": {
-            "en": "Low",
-            "no": "Lav"
+            "en": "Low"
           }
         },
         {
           "id": "med",
           "title": {
-            "en": "Medium",
-            "no": "Middels"
+            "en": "Medium"
           }
         },
         {
           "id": "high",
           "title": {
-            "en": "High",
-            "no": "Høy"
+            "en": "High"
           }
         }
       ]
@@ -136,8 +127,7 @@
     "pana_mode": {
       "type": "enum",
       "title": {
-        "en": "Mode",
-        "no": "Modus"
+        "en": "Mode"
       },
       "getable": true,
       "setable": true,
@@ -146,36 +136,31 @@
         {
           "id": "auto",
           "title": {
-            "en": "Auto",
-            "no": "Auto"
+            "en": "Auto"
           }
         },
         {
           "id": "heat",
           "title": {
-            "en": "Heat",
-            "no": "Varme"
+            "en": "Heat"
           }
         },
         {
           "id": "cool",
           "title": {
-            "en": "Cool",
-            "no": "Kjøling"
+            "en": "Cool"
           }
         },
         {
           "id": "dry",
           "title": {
-            "en": "Dry",
-            "no": "Tørke"
+            "en": "Dry"
           }
         },
         {
           "id": "fan",
           "title": {
-            "en": "Fan only",
-            "no": "Kun vifte"
+            "en": "Fan only"
           }
         }
       ]

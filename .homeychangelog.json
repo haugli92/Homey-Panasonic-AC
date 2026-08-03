@@ -1,6 +1,5 @@
 {
   "1.0.0": {
-    "en": "Initial release: control a Panasonic CS-E12DKEW heat pump over infrared (on/off, temperature, mode and fan speed) using Homey's built-in IR blaster.",
-    "no": "Første versjon: styr en Panasonic CS-E12DKEW varmepumpe over infrarødt (av/på, temperatur, modus og viftehastighet) med Homeys innebygde IR-sender."
+    "en": "Initial release. Added support for the Panasonic CS-E12DKEW (DKE IR protocol)."
   }
 }

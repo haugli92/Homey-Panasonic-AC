@@ -5,12 +5,10 @@
   "sdk": 3,
   "platforms": ["local"],
   "name": {
-    "en": "Panasonic AC (IR)",
-    "no": "Panasonic AC (IR)"
+    "en": "Panasonic AC (IR)"
   },
   "description": {
-    "en": "Smart climate control over infrared",
-    "no": "Smart klimastyring over infrarødt"
+    "en": "Smart climate control over infrared"
   },
   "category": ["climate"],
   "brandColor": "#0056A0",
