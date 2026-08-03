@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-  <!-- Monochrome silhouette, fills only (Homey masks by fill; strokes are ignored). -->
-  <path fill="#ffffff" fill-rule="evenodd" d="M54 82 h148 a22 22 0 0 1 22 22 v30 a22 22 0 0 1 -22 22 h-148 a22 22 0 0 1 -22 -22 v-30 a22 22 0 0 1 22 -22 Z M66 126 h124 a7 7 0 0 1 0 14 h-124 a7 7 0 0 1 0 -14 Z"/>
-  <path fill="#ffffff" d="M94 172 Q128 198 162 172 L162 182 Q128 208 94 182 Z"/>
-  <path fill="#ffffff" d="M80 194 Q128 226 176 194 L176 204 Q128 236 80 204 Z"/>
+  <!-- Clean line-art app icon (Homey masks it and applies the brand colour). -->
+  <g fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="42" y="84" width="172" height="66" rx="20"/>
+    <line x1="66" y1="128" x2="190" y2="128"/>
+    <path d="M98 180 q30 24 60 0"/>
+    <path d="M84 202 q44 28 88 0"/>
+  </g>
 </svg>
