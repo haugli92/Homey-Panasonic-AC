@@ -5,8 +5,8 @@
   "sdk": 3,
   "platforms": ["local"],
   "name": {
-    "en": "Panasonic CS-E12DKEW (IR)",
-    "no": "Panasonic CS-E12DKEW (IR)"
+    "en": "Panasonic AC (IR)",
+    "no": "Panasonic AC (IR)"
   },
   "description": {
     "en": "Control a Panasonic CS-E12DKEW heat pump over infrared using Homey's built-in IR blaster.",
