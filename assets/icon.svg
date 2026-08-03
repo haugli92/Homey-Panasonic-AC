@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-  <!-- Monochrome silhouette: Homey masks icon.svg by alpha and recolors it. -->
+  <!-- Monochrome silhouette, fills only (Homey masks by fill; strokes are ignored). -->
   <path fill="#ffffff" fill-rule="evenodd" d="M54 82 h148 a22 22 0 0 1 22 22 v30 a22 22 0 0 1 -22 22 h-148 a22 22 0 0 1 -22 -22 v-30 a22 22 0 0 1 22 -22 Z M66 126 h124 a7 7 0 0 1 0 14 h-124 a7 7 0 0 1 0 -14 Z"/>
-  <g fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round">
-    <path d="M96 178 q32 26 64 0"/>
-    <path d="M80 202 q48 30 96 0"/>
-  </g>
+  <path fill="#ffffff" d="M94 172 Q128 198 162 172 L162 182 Q128 208 94 182 Z"/>
+  <path fill="#ffffff" d="M80 194 Q128 226 176 194 L176 204 Q128 236 80 204 Z"/>
 </svg>
