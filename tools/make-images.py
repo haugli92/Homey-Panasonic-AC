@@ -1,60 +1,93 @@
 #!/usr/bin/env python3
 """Generate the PNG assets Homey requires, plus copy the driver icon.
-Draws a simple AC indoor-unit glyph on the brand color. Replace with nicer
-artwork any time — Homey only needs valid PNGs at the right dimensions."""
+
+Draws a clean AC indoor-unit glyph with airflow on a brand-blue gradient.
+Everything is rendered at 4x and downscaled with LANCZOS for smooth edges.
+Replace with custom artwork any time — Homey only needs valid PNGs at the
+right dimensions."""
 import os
 import shutil
 from PIL import Image, ImageDraw
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BRAND = (0, 86, 160)
-BRAND_HI = (0, 103, 192)
+SS = 4  # supersampling factor for anti-aliasing
+
+TOP = (0, 103, 192)
+BOTTOM = (0, 74, 140)
 WHITE = (255, 255, 255)
-SOFT = (207, 227, 245)
+ACCENT = (206, 227, 245)
 
 
-def rounded(draw, box, r, fill):
-    draw.rounded_rectangle(box, radius=r, fill=fill)
-
-
-def draw_glyph(size):
+def gradient(size):
     w, h = size
-    img = Image.new("RGBA", size, BRAND + (255,))
+    img = Image.new("RGB", size)
+    px = img.load()
+    for y in range(h):
+        t = y / max(1, h - 1)
+        row = tuple(round(TOP[i] + (BOTTOM[i] - TOP[i]) * t) for i in range(3))
+        for x in range(w):
+            px[x, y] = row
+    return img
+
+
+def glyph(size):
+    w, h = (size[0] * SS, size[1] * SS)
+    img = gradient((w, h)).convert("RGBA")
     d = ImageDraw.Draw(img)
     s = min(w, h)
-    # AC unit body, centered
-    bw, bh = int(s * 0.62), int(s * 0.24)
-    x0, y0 = (w - bw) // 2, int(h * 0.30)
-    r = int(bh * 0.35)
-    rounded(d, [x0, y0, x0 + bw, y0 + bh], r, WHITE)
-    rounded(d, [x0, y0, x0 + bw, y0 + int(bh * 0.5)], r, SOFT)
-    # louver lines
-    ly = y0 + int(bh * 0.72)
-    d.line([x0 + r, ly, x0 + bw - r, ly], fill=BRAND, width=max(2, s // 60))
-    # airflow waves
-    for i, col in enumerate((WHITE, SOFT)):
-        wy = y0 + bh + int(s * 0.10) + i * int(s * 0.11)
-        step = bw // 4
-        for k in range(3):
-            cx = x0 + step // 2 + k * step
-            d.arc([cx - step // 2, wy - step // 2, cx + step // 2, wy + step // 2],
-                  start=180, end=360, fill=col, width=max(2, s // 55))
-    return img
+
+    bw, bh = int(s * 0.66), int(s * 0.26)
+    x0 = (w - bw) // 2
+    y0 = int(h * 0.28)
+    r = int(bh * 0.34)
+
+    # soft shadow
+    shadow = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    ds = ImageDraw.Draw(shadow)
+    off = int(s * 0.015)
+    ds.rounded_rectangle([x0, y0 + off, x0 + bw, y0 + bh + off], radius=r,
+                         fill=(0, 0, 0, 70))
+    img.alpha_composite(shadow)
+
+    # unit body
+    d.rounded_rectangle([x0, y0, x0 + bw, y0 + bh], radius=r, fill=WHITE)
+    d.rounded_rectangle([x0, y0, x0 + bw, y0 + int(bh * 0.46)], radius=r,
+                        fill=ACCENT)
+    # louver
+    ly = y0 + int(bh * 0.74)
+    d.line([x0 + r, ly, x0 + bw - r, ly], fill=(0, 86, 160), width=max(SS, s // 90))
+    # status dot
+    dot = int(bh * 0.11)
+    dx = x0 + bw - int(bh * 0.5)
+    dy = y0 + int(bh * 0.24)
+    d.ellipse([dx, dy, dx + dot, dy + dot], fill=(0, 122, 90))
+
+    # airflow arcs
+    for i in range(3):
+        aw = int(bw * (0.34 + i * 0.12))
+        ah = int(s * 0.16)
+        ax = w // 2 - aw // 2
+        ay = y0 + bh + int(s * 0.06) + i * int(s * 0.05)
+        alpha = 235 - i * 60
+        d.arc([ax, ay, ax + aw, ay + ah], start=200, end=340,
+              fill=(255, 255, 255, alpha), width=max(SS, s // 80))
+
+    return img.resize(size, Image.LANCZOS)
 
 
 def save(img, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    img.save(path)
+    img.convert("RGBA").save(path)
     print("wrote", os.path.relpath(path, ROOT))
 
 
 # App images
 for name, dim in (("small", (250, 175)), ("large", (500, 350)), ("xlarge", (1000, 700))):
-    save(draw_glyph(dim), os.path.join(ROOT, "assets", "images", f"{name}.png"))
+    save(glyph(dim), os.path.join(ROOT, "assets", "images", f"{name}.png"))
 
 # Driver images
 for name, dim in (("small", (75, 75)), ("large", (500, 500)), ("xlarge", (1000, 1000))):
-    save(draw_glyph(dim), os.path.join(ROOT, "drivers", "heatpump", "assets", "images", f"{name}.png"))
+    save(glyph(dim), os.path.join(ROOT, "drivers", "heatpump", "assets", "images", f"{name}.png"))
 
 # Driver icon = app icon
 shutil.copyfile(

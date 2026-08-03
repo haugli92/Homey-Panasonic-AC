@@ -58,7 +58,9 @@ module.exports = class PanasonicDkeDevice extends Homey.Device {
     // Adjusting settings while off: just remember them, don't wake the unit.
     if (!power) return undefined;
 
-    return this._send({ power: true, mode, temp, fan });
+    return this._send({
+      power: true, mode, temp, fan,
+    });
   }
 
   async _send(state) {

@@ -1,0 +1,15 @@
+{
+  "extends": "athom",
+  "rules": {
+    "no-bitwise": "off"
+  },
+  "overrides": [
+    {
+      "files": ["tools/**", "test/**"],
+      "rules": {
+        "no-console": "off",
+        "node/no-unpublished-require": "off"
+      }
+    }
+  ]
+}

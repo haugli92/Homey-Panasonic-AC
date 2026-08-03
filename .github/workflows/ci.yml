@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HOMEY_TELEMETRY: '0'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Verify generated signals are up to date
+        run: |
+          npm run generate
+          git diff --exit-code .homeycompose/signals/ir/panasonic_dke.json
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Validate Homey app
+        run: |
+          npm install -g homey
+          homey app build
+          homey app validate --level publish

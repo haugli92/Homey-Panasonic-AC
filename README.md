@@ -67,8 +67,28 @@ Place Homey with line of sight to the indoor unit.
   until the next command is sent.
 - Vertical swing is left at the unit's default; fan speeds are auto/low/med/high.
 
+## Development
+
+```bash
+npm install
+npm run generate   # regenerate the IR command map from lib/panasonic-dke.js
+npm run images     # regenerate the app/driver artwork
+npm run lint       # eslint (eslint-config-athom)
+npm test           # unit + round-trip tests (node:test)
+npm run validate   # homey app validate --level publish
+```
+
+The test suite decodes **all 245** generated Pronto HEX commands back into
+state frames and asserts the checksum and every field (power, mode, temperature,
+fan) match the command's label — so a bug in the encoder or generator fails CI
+rather than reaching hardware. It also pins the encoder against the exact
+byte sequence verified on a real CS-E12DKEW.
+
 ## Credits & licensing
 
-Protocol logic ported from **IRremoteESP8266** by David Conran et al.
-(LGPL-2.1). Released under the MIT license — see [`LICENSE`](LICENSE). If you plan
-a wider public release, review compatibility with the upstream LGPL terms.
+The Panasonic **DKE** protocol implementation in
+[`lib/panasonic-dke.js`](lib/panasonic-dke.js) is derived from
+[IRremoteESP8266](https://github.com/crankyoldgit/IRremoteESP8266) by David
+Conran and contributors (**LGPL-2.1**); that file is therefore licensed under
+**LGPL-2.1** (see [`LICENSE.LGPL-2.1`](LICENSE.LGPL-2.1) and [`NOTICE`](NOTICE)).
+All other original code is under the **MIT** license (see [`LICENSE`](LICENSE)).

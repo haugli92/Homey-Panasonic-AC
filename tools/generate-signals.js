@@ -34,7 +34,9 @@ for (const mode of MODES) {
   }
   for (const temp of TEMPS) {
     for (const fan of FANS) {
-      cmds[cmdKey({ power: true, mode, temp, fan })] = buildProntoHex({
+      cmds[cmdKey({
+        power: true, mode, temp, fan,
+      })] = buildProntoHex({
         power: true, mode: MODE_MAP[mode], temp, fan: FAN_MAP[fan],
       });
     }
