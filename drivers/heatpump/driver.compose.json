@@ -1,0 +1,30 @@
+{
+  "name": { "en": "Panasonic CS-E12DKEW", "no": "Panasonic CS-E12DKEW" },
+  "class": "thermostat",
+  "capabilities": ["onoff", "target_temperature", "pana_mode", "pana_fan"],
+  "capabilitiesOptions": {
+    "target_temperature": {
+      "min": 16,
+      "max": 30,
+      "step": 1,
+      "units": { "en": "°C", "no": "°C" }
+    }
+  },
+  "platforms": ["local"],
+  "images": {
+    "small": "/drivers/heatpump/assets/images/small.png",
+    "large": "/drivers/heatpump/assets/images/large.png",
+    "xlarge": "/drivers/heatpump/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": { "next": "add_devices" }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
