@@ -1,12 +1,19 @@
-# Panasonic CS-E12DKEW (IR) — Homey app
+# Panasonic AC (IR) — Homey app
 
-Control a **Panasonic CS-E12DKEW** heat pump from [Homey](https://homey.app) over
-infrared, using Homey's **built-in IR blaster**. The unit shows up as a normal
-climate device with on/off, target temperature, operating mode and fan speed —
-so you get the thermostat tile, Flows and schedules, without pasting raw IR codes.
+Control a Panasonic air conditioner / heat pump from [Homey](https://homey.app)
+over infrared, using Homey's **built-in IR blaster**. The unit shows up as a
+normal climate device with on/off, target temperature, operating mode and fan
+speed — so you get the thermostat tile, Flows and schedules, without pasting raw
+IR codes.
 
-> ⚠️ **Scope:** This app currently targets the single model **CS-E12DKEW**
-> (Panasonic "DKE" IR protocol). Other models are untested.
+## Supported models
+
+| Model                | IR protocol | Status                        |
+| -------------------- | ----------- | ----------------------------- |
+| Panasonic CS-E12DKEW | DKE         | ✅ Verified on real hardware  |
+
+Other Panasonic units using the **DKE** IR protocol are likely compatible but
+untested. Contributions adding and confirming further models are welcome.
 
 ## How it works
 
