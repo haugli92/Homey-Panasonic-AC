@@ -4,5 +4,8 @@
   },
   "1.0.1": {
     "en": "Improved Store images and device classification."
+  },
+  "1.1.0": {
+    "en": "Show room temperature and humidity from a selectable sensor (current → target)."
   }
 }
