@@ -4,6 +4,7 @@ const Homey = require('homey');
 const { cmdKey } = require('../../lib/cmd-keys');
 
 const SIGNAL_ID = 'panasonic_dke';
+const SOURCE_SETTING = 'sourceSensor'; // app setting: id of the room-temp source device
 const DEFAULTS = {
   onoff: false,
   target_temperature: 22,
@@ -30,6 +31,15 @@ module.exports = class PanasonicDkeDevice extends Homey.Device {
       500,
     );
 
+    // Mirror the room temperature from a user-selected source device, and
+    // re-subscribe whenever that selection changes.
+    this._onSettingsChange = (key) => {
+      if (key === SOURCE_SETTING) this._applySensorSource().catch(this.error);
+    };
+    this.homey.settings.on('set', this._onSettingsChange);
+    this.homey.settings.on('unset', this._onSettingsChange);
+    await this._applySensorSource().catch(this.error);
+
     this.log('Panasonic CS-E12DKEW device ready');
   }
 
@@ -40,6 +50,45 @@ module.exports = class PanasonicDkeDevice extends Homey.Device {
         await this.setCapabilityValue(cap, value).catch(this.error);
       }
     }
+  }
+
+  // --- External room-temperature source ---
+
+  async _applySensorSource() {
+    // Tear down any previous subscription first.
+    if (this._tempInstance) {
+      this._tempInstance.destroy();
+      this._tempInstance = null;
+    }
+
+    const sourceId = this.homey.settings.get(SOURCE_SETTING);
+    if (!sourceId) {
+      await this.setCapabilityValue('measure_temperature', null).catch(() => {});
+      return;
+    }
+
+    const { homeyApi } = this.homey.app;
+    if (!homeyApi) {
+      this.error('HomeyAPI not ready; cannot subscribe to source sensor');
+      return;
+    }
+
+    const source = await homeyApi.devices.getDevice({ id: sourceId });
+    if (!source) {
+      this.error('Selected source sensor not found:', sourceId);
+      return;
+    }
+
+    // Seed with the current value, then follow realtime updates.
+    const initial = source.capabilitiesObj?.measure_temperature?.value;
+    if (typeof initial === 'number') {
+      await this.setCapabilityValue('measure_temperature', initial).catch(this.error);
+    }
+
+    this._tempInstance = source.makeCapabilityInstance('measure_temperature', (value) => {
+      this.setCapabilityValue('measure_temperature', value).catch(this.error);
+    });
+    this.log('Mirroring room temperature from', source.name);
   }
 
   async _onCapabilities(values) {
@@ -68,6 +117,17 @@ module.exports = class PanasonicDkeDevice extends Homey.Device {
     const key = cmdKey(state);
     this.log('IR →', key);
     await this.signal.cmd(key);
+  }
+
+  async onUninit() {
+    if (this._tempInstance) {
+      this._tempInstance.destroy();
+      this._tempInstance = null;
+    }
+    if (this._onSettingsChange) {
+      this.homey.settings.removeListener('set', this._onSettingsChange);
+      this.homey.settings.removeListener('unset', this._onSettingsChange);
+    }
   }
 
 };

@@ -17,8 +17,15 @@
   ],
   "brandColor": "#0056A0",
   "permissions": [
-    "homey:wireless:ir"
+    "homey:wireless:ir",
+    "homey:manager:api"
   ],
+  "api": {
+    "getSensors": {
+      "method": "GET",
+      "path": "/sensors"
+    }
+  },
   "author": {
     "name": "Joran Haugli",
     "email": "joran.haugli@g.inn.no"

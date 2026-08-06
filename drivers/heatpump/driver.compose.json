@@ -1,13 +1,16 @@
 {
   "name": { "en": "Panasonic CS-E12DKEW" },
   "class": "airconditioning",
-  "capabilities": ["onoff", "target_temperature", "pana_mode", "pana_fan"],
+  "capabilities": ["onoff", "measure_temperature", "target_temperature", "pana_mode", "pana_fan"],
   "capabilitiesOptions": {
     "target_temperature": {
       "min": 16,
       "max": 30,
       "step": 1,
       "units": { "en": "°C" }
+    },
+    "measure_temperature": {
+      "title": { "en": "Room temperature" }
     }
   },
   "platforms": ["local"],

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panasonic AC (IR)</title>
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <style>
+    body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; padding: 20px; }
+    h1 { font-size: 1.2em; margin: 0 0 4px; }
+    p.hint { color: #888; margin: 0 0 16px; font-size: 0.9em; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    select { width: 100%; padding: 10px; font-size: 1em; border-radius: 8px; }
+    #status { margin-top: 12px; font-size: 0.9em; color: #2e7d32; min-height: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>Room temperature sensor</h1>
+  <p class="hint">
+    Pick a device whose temperature should be shown on the air conditioner
+    (current&nbsp;→&nbsp;target). Leave empty to show no room temperature.
+  </p>
+
+  <label for="sensor">Source sensor</label>
+  <select id="sensor"><option value="">Loading…</option></select>
+  <div id="status"></div>
+
+  <script type="text/javascript">
+    function onHomeyReady(Homey) {
+      const select = document.getElementById('sensor');
+      const status = document.getElementById('status');
+
+      function flash(msg) {
+        status.textContent = msg;
+        setTimeout(() => { status.textContent = ''; }, 2000);
+      }
+
+      Homey.api('GET', '/sensors', null, function (err, sensors) {
+        if (err) {
+          select.innerHTML = '<option value="">Error loading devices</option>';
+          Homey.alert(err.message || String(err));
+          Homey.ready();
+          return;
+        }
+
+        Homey.get('sourceSensor', function (getErr, current) {
+          const selected = getErr ? '' : (current || '');
+          let html = '<option value="">— None —</option>';
+          sensors.forEach(function (s) {
+            const sel = s.id === selected ? ' selected' : '';
+            html += '<option value="' + s.id + '"' + sel + '>' + s.name + '</option>';
+          });
+          select.innerHTML = html;
+          Homey.ready();
+        });
+      });
+
+      select.addEventListener('change', function () {
+        Homey.set('sourceSensor', select.value, function (err) {
+          if (err) return Homey.alert(err.message || String(err));
+          flash('Saved');
+        });
+      });
+    }
+  </script>
+</body>
+</html>
