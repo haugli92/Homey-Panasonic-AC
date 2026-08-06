@@ -1,6 +1,6 @@
 {
   "name": { "en": "Panasonic CS-E12DKEW" },
-  "class": "thermostat",
+  "class": "airconditioning",
   "capabilities": ["onoff", "target_temperature", "pana_mode", "pana_fan"],
   "capabilitiesOptions": {
     "target_temperature": {
