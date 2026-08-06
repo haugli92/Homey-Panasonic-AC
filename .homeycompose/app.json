@@ -1,25 +1,34 @@
 {
   "id": "dev.haugli.panasonicac",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=12.0.0",
   "sdk": 3,
-  "platforms": ["local"],
+  "platforms": [
+    "local"
+  ],
   "name": {
     "en": "Panasonic AC (IR)"
   },
   "description": {
     "en": "Smart climate control over infrared"
   },
-  "category": ["climate"],
+  "category": [
+    "climate"
+  ],
   "brandColor": "#0056A0",
-  "permissions": ["homey:wireless:ir"],
+  "permissions": [
+    "homey:wireless:ir"
+  ],
   "author": {
     "name": "Joran Haugli",
     "email": "joran.haugli@g.inn.no"
   },
   "contributors": {
     "developers": [
-      { "name": "Joran Haugli", "email": "joran.haugli@g.inn.no" }
+      {
+        "name": "Joran Haugli",
+        "email": "joran.haugli@g.inn.no"
+      }
     ]
   },
   "bugs": {

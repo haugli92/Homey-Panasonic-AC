@@ -1,5 +1,8 @@
 {
   "1.0.0": {
     "en": "Initial release. Added support for the Panasonic CS-E12DKEW (DKE IR protocol)."
+  },
+  "1.0.1": {
+    "en": "Improved Store images and device classification."
   }
 }
