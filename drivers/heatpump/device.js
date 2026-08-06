@@ -4,7 +4,7 @@ const Homey = require('homey');
 const { cmdKey } = require('../../lib/cmd-keys');
 
 const SIGNAL_ID = 'panasonic_dke';
-const SOURCE_SETTING = 'sourceSensor'; // app setting: id of the room-temp source device
+const SOURCES_SETTING = 'sources'; // app setting: { [acDataId]: sourceSensorId }
 const DEFAULTS = {
   onoff: false,
   target_temperature: 22,
@@ -21,6 +21,11 @@ module.exports = class PanasonicDkeDevice extends Homey.Device {
       this.error('Failed to acquire IR signal:', err);
     }
 
+    // Migrate devices added before measure_temperature existed.
+    if (!this.hasCapability('measure_temperature')) {
+      await this.addCapability('measure_temperature').catch(this.error);
+    }
+
     await this._ensureDefaults();
 
     // Panasonic sends the whole state in one frame, so batch simultaneous
@@ -34,7 +39,7 @@ module.exports = class PanasonicDkeDevice extends Homey.Device {
     // Mirror the room temperature from a user-selected source device, and
     // re-subscribe whenever that selection changes.
     this._onSettingsChange = (key) => {
-      if (key === SOURCE_SETTING) this._applySensorSource().catch(this.error);
+      if (key === SOURCES_SETTING) this._applySensorSource().catch(this.error);
     };
     this.homey.settings.on('set', this._onSettingsChange);
     this.homey.settings.on('unset', this._onSettingsChange);
@@ -61,7 +66,8 @@ module.exports = class PanasonicDkeDevice extends Homey.Device {
       this._tempInstance = null;
     }
 
-    const sourceId = this.homey.settings.get(SOURCE_SETTING);
+    const map = this.homey.settings.get(SOURCES_SETTING) || {};
+    const sourceId = map[this.getData().id];
     if (!sourceId) {
       await this.setCapabilityValue('measure_temperature', null).catch(() => {});
       return;

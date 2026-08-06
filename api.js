@@ -1,9 +1,13 @@
 'use strict';
 
 module.exports = {
-  // GET /sensors — list devices with a room-temperature reading (for the
-  // settings picker). Route is declared under "api" in the app manifest.
+  // GET /sensors — devices with a room-temperature reading (with zone name).
   async getSensors({ homey }) {
     return homey.app.getSensors();
+  },
+
+  // GET /ac-devices — this app's air-conditioner devices, for per-device pickers.
+  async getAcDevices({ homey }) {
+    return homey.app.getAcDevices();
   },
 };

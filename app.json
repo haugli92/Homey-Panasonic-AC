@@ -25,6 +25,10 @@
     "getSensors": {
       "method": "GET",
       "path": "/sensors"
+    },
+    "getAcDevices": {
+      "method": "GET",
+      "path": "/ac-devices"
     }
   },
   "author": {
