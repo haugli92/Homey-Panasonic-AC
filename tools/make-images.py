@@ -1,92 +1,65 @@
 #!/usr/bin/env python3
-"""Generate the PNG assets Homey requires, for both the app and the driver.
+"""Generate Homey Store images from the source photos in assets/src/.
 
-Draws a clean AC indoor-unit glyph with airflow on a brand-blue gradient.
-Everything is rendered at 4x and downscaled with LANCZOS for smooth edges.
-The app/driver icon.svg files are hand-maintained separately and not touched
-here."""
+- App images (250x175, 500x350, 1000x700): a lifestyle photo, centre-cropped
+  to the required aspect ratio.
+- Driver images (75x75, 500x500, 1000x1000): a product photo of the device,
+  composited on white and centred as a square with a small margin.
+
+See assets/src/ATTRIBUTION.md for image sources and licenses.
+Run: python3 tools/make-images.py
+"""
 import os
-from PIL import Image, ImageDraw
+from PIL import Image
+import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SS = 4  # supersampling factor for anti-aliasing
-
-TOP = (0, 103, 192)
-BOTTOM = (0, 74, 140)
-WHITE = (255, 255, 255)
-ACCENT = (206, 227, 245)
+SRC = os.path.join(ROOT, "assets", "src")
 
 
-def gradient(size):
-    w, h = size
-    img = Image.new("RGB", size)
-    px = img.load()
-    for y in range(h):
-        t = y / max(1, h - 1)
-        row = tuple(round(TOP[i] + (BOTTOM[i] - TOP[i]) * t) for i in range(3))
-        for x in range(w):
-            px[x, y] = row
-    return img
+def app_image(size):
+    im = Image.open(os.path.join(SRC, "app-lifestyle.jpg")).convert("RGB")
+    w, h = im.size
+    tw, th = size
+    target = tw / th
+    if w / h > target:
+        cw = int(h * target)
+        left = (w - cw) // 2
+        box = (left, 0, left + cw, h)
+    else:
+        ch = int(w / target)
+        top = (h - ch) // 2
+        box = (0, top, w, top + ch)
+    return im.crop(box).resize(size, Image.LANCZOS)
 
 
-def glyph(size):
-    w, h = (size[0] * SS, size[1] * SS)
-    img = gradient((w, h)).convert("RGBA")
-    d = ImageDraw.Draw(img)
-    s = min(w, h)
-
-    bw, bh = int(s * 0.66), int(s * 0.26)
-    x0 = (w - bw) // 2
-    y0 = int(h * 0.28)
-    r = int(bh * 0.34)
-
-    # soft shadow
-    shadow = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    ds = ImageDraw.Draw(shadow)
-    off = int(s * 0.015)
-    ds.rounded_rectangle([x0, y0 + off, x0 + bw, y0 + bh + off], radius=r,
-                         fill=(0, 0, 0, 70))
-    img.alpha_composite(shadow)
-
-    # unit body
-    d.rounded_rectangle([x0, y0, x0 + bw, y0 + bh], radius=r, fill=WHITE)
-    d.rounded_rectangle([x0, y0, x0 + bw, y0 + int(bh * 0.46)], radius=r,
-                        fill=ACCENT)
-    # louver
-    ly = y0 + int(bh * 0.74)
-    d.line([x0 + r, ly, x0 + bw - r, ly], fill=(0, 86, 160), width=max(SS, s // 90))
-    # status dot
-    dot = int(bh * 0.11)
-    dx = x0 + bw - int(bh * 0.5)
-    dy = y0 + int(bh * 0.24)
-    d.ellipse([dx, dy, dx + dot, dy + dot], fill=(0, 122, 90))
-
-    # airflow arcs
-    for i in range(3):
-        aw = int(bw * (0.34 + i * 0.12))
-        ah = int(s * 0.16)
-        ax = w // 2 - aw // 2
-        ay = y0 + bh + int(s * 0.06) + i * int(s * 0.05)
-        alpha = 235 - i * 60
-        d.arc([ax, ay, ax + aw, ay + ah], start=200, end=340,
-              fill=(255, 255, 255, alpha), width=max(SS, s // 80))
-
-    return img.resize(size, Image.LANCZOS)
+def driver_image(side):
+    im = Image.open(os.path.join(SRC, "device.webp")).convert("RGBA")
+    bg = Image.new("RGBA", im.size, (255, 255, 255, 255))
+    bg.alpha_composite(im)
+    rgb = bg.convert("RGB")
+    a = np.asarray(rgb).astype(int)
+    mask = (a[:, :, 0] < 245) | (a[:, :, 1] < 245) | (a[:, :, 2] < 245)
+    ys, xs = np.where(mask)
+    crop = rgb.crop((xs.min(), ys.min(), xs.max() + 1, ys.max() + 1))
+    cw, ch = crop.size
+    s = int(max(cw, ch) * 1.14)  # square canvas with ~7% margin
+    canvas = Image.new("RGB", (s, s), (255, 255, 255))
+    canvas.paste(crop, ((s - cw) // 2, (s - ch) // 2))
+    return canvas.resize((side, side), Image.LANCZOS)
 
 
 def save(img, path):
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    img.convert("RGBA").save(path)
+    img.save(path)
     print("wrote", os.path.relpath(path, ROOT))
 
 
-# App images
 for name, dim in (("small", (250, 175)), ("large", (500, 350)), ("xlarge", (1000, 700))):
-    save(glyph(dim), os.path.join(ROOT, "assets", "images", f"{name}.png"))
+    save(app_image(dim), os.path.join(ROOT, "assets", "images", f"{name}.png"))
 
-# Driver images
-for name, dim in (("small", (75, 75)), ("large", (500, 500)), ("xlarge", (1000, 1000))):
-    save(glyph(dim), os.path.join(ROOT, "drivers", "heatpump", "assets", "images", f"{name}.png"))
+for name, side in (("small", 75), ("large", 500), ("xlarge", 1000)):
+    save(driver_image(side), os.path.join(ROOT, "drivers", "heatpump", "assets", "images", f"{name}.png"))
 
-# Note: app icon (assets/icon.svg) and driver icon (drivers/heatpump/assets/icon.svg)
-# are hand-maintained SVGs and are intentionally not generated here.
+# Note: the app/driver icon.svg files are hand-maintained line/silhouette art
+# and are intentionally not generated here.
